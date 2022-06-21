@@ -6,8 +6,6 @@ require github.com/gofiber/fiber v1.14.6
 
 require (
 	github.com/andybalholm/brotli v1.0.4 // indirect
-	github.com/goava/di v1.11.1 // indirect
-	github.com/gofiber/fiber/v2 v2.34.1 // indirect
 	github.com/gofiber/utils v0.0.10 // indirect
 	github.com/gorilla/schema v1.1.0 // indirect
 	github.com/klauspost/compress v1.15.6 // indirect
