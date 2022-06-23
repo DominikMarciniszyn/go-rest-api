@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  go-database:
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5433:5432
+    volumes:
+      - go-database:/var/lib/postgresql/data
+
+volumes:
+  go-database:
+    driver: local

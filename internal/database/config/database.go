@@ -7,13 +7,13 @@ import (
 	"go-rest-api/internal/database/entities"
 )
 
-var database *gorm.DB
-var DATABASE_URI string = "host=localhost user=admin password=admin dbname=postgres port=5433 sslmode=disable"
+var Database *gorm.DB
+var DATABASE_URI string = "host=localhost user=postgres password=postgres dbname=postgres port=5433 sslmode=disable"
 
 func Connect() error {
 	var err error
 
-	database, err = gorm.Open(postgres.Open(DATABASE_URI), &gorm.Config{
+	Database, err = gorm.Open(postgres.Open(DATABASE_URI), &gorm.Config{
 		PrepareStmt:            true,
 		SkipDefaultTransaction: true,
 	})
@@ -22,7 +22,7 @@ func Connect() error {
 		panic(err)
 	}
 
-	database.AutoMigrate(&entities.Order{})
+	Database.AutoMigrate(&entities.Order{})
 
 	return nil
 }
