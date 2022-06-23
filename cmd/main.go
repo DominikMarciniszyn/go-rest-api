@@ -10,14 +10,17 @@ import (
 
 func main() {
 	app := fiber.New()
+
+	api := app.Group("/api")
 	config.Connect()
 
-	app.Get("/ping", routes.Ping)
-	app.Get("/orders", routes.GetOrders)
-	app.Get("/orders/:id", routes.GetOrder)
-	app.Post("/orders", routes.CreateOrder)
-	app.Put("/orders/:id", routes.UpdateOrder)
-	app.Delete("/orders/:id", routes.RemoveOrder)
+	v1 := api.Group("/v1")
+	v1.Get("/ping", routes.Ping)
+	v1.Get("/orders", routes.GetOrders)
+	v1.Get("/orders/:id", routes.GetOrder)
+	v1.Post("/orders", routes.CreateOrder)
+	v1.Put("/orders/:id", routes.UpdateOrder)
+	v1.Delete("/orders/:id", routes.RemoveOrder)
 
 	log.Fatal(app.Listen(":3000"))
 }
