@@ -1,18 +1,26 @@
-FROM golang:1.18 AS build
+FROM golang:1.18-alpine AS build
 
 WORKDIR /go/src/go-rest-api
 
-COPY . .
+COPY go.mod /go/src/go-rest-api
+COPY go.sum /go/src/go-rest-api
+COPY .env /go/src/go-rest-api
 
 RUN go mod download
-RUN go build -o app /go/src/go-rest-api/cmd/main.go
 
-# FROM alpine:latest
+COPY . /go/src/go-rest-api/
 
-# WORKDIR /app
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o build/go-rest-api cmd/main.go
 
-# COPY --from=build /go/src/go-rest-api/app .
+FROM alpine
 
-EXPOSE 3000
+WORKDIR /usr/bin/go-rest-api
 
-CMD [ "./app" ]
+RUN apk add --no-cache ca-certificates && update-ca-certificates
+
+COPY --from=build /go/src/go-rest-api/build/go-rest-api /usr/bin/go-rest-api/main
+COPY --from=build /go/src/go-rest-api/.env /usr/bin/go-rest-api/
+
+EXPOSE 3000 3000
+
+ENTRYPOINT [ "/usr/bin/go-rest-api/main" ]
