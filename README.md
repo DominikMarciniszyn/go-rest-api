@@ -13,3 +13,5 @@ To run the project in docker-compose env you need to set up below variables in .
 - DATABASE_PASSWORD=<name_of_the_password>
 - DATABASE_NAME=<name_of_the_database>
 
+### Run the project
+To run the project you can use command `docker-compose up -d`
