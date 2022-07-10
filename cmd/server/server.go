@@ -12,7 +12,11 @@ func StartServer() {
 	app := fiber.New()
 
 	api := app.Group("/api")
-	config.Connect()
+	err := config.Connect()
+
+	if err != nil {
+		log.Fatal("Cannot connect with the database!")
+	}
 
 	v1 := api.Group("/v1")
 	v1.Get("/ping", routes.Ping)
