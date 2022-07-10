@@ -1,11 +1,9 @@
 package main
 
 import (
+	"github.com/joho/godotenv"
 	"go-rest-api/cmd/server"
 	"log"
-	"os"
-
-	"github.com/joho/godotenv"
 )
 
 func main() {
@@ -13,7 +11,6 @@ func main() {
 
 	if err != nil {
 		log.Fatal("Error:", err)
-		os.Exit(1)
 	}
 
 	server.StartServer()
