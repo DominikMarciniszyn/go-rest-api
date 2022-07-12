@@ -1,14 +1,31 @@
 package server
 
 import (
+	"github.com/gofiber/fiber"
+	"github.com/rs/zerolog"
 	"go-rest-api/internal/database/config"
 	"go-rest-api/internal/routes"
 	"log"
-
-	"github.com/gofiber/fiber"
 )
 
-func StartServer() {
+type WebServer struct {
+	server *fiber.App
+	log    *zerolog.Logger
+	port   *int
+}
+
+func New(log *zerolog.Logger, port *int) *fiber.App {
+	app := fiber.New()
+
+	err := app.Listen(port)
+	if err != nil {
+		return nil
+	}
+
+	return nil
+}
+
+func StartServer() error {
 	app := fiber.New()
 
 	api := app.Group("/api")
@@ -27,4 +44,6 @@ func StartServer() {
 	v1.Delete("/orders/:id", routes.RemoveOrder)
 
 	log.Fatal(app.Listen(":3000"))
+
+	return nil
 }
