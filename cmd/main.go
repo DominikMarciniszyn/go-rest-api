@@ -1,21 +1,43 @@
 package main
 
 import (
-	"github.com/joho/godotenv"
-	"go-rest-api/cmd/server"
-	"log"
+	"github.com/gofiber/fiber"
+	"github.com/rs/zerolog/log"
+	"go-rest-api/internal"
+	"go-rest-api/internal/config"
+	"os"
+	"os/signal"
 )
 
 func main() {
-	err := loadConfig()
+	config.InitServiceConfig()
 
-	if err != nil {
-		log.Fatal("Error:", err)
+	if err := internal.Invoke(startHttpServer); err != nil {
+		panic(err)
 	}
-
-	server.StartServer()
 }
 
-func loadConfig() error {
-	return godotenv.Load()
+func startHttpServer(server *fiber.App) error {
+	done := make(chan bool, 1)
+	quit := make(chan os.Signal, 1)
+
+	signal.Notify(quit, os.Interrupt)
+
+	go func() {
+		<-quit
+		log.Trace().Msg("Received SIGINT")
+
+		err := server.Shutdown()
+
+		if err != nil {
+			return
+		}
+
+		log.Trace().Msg("Shutdown gracefully")
+
+		done <- true
+	}()
+
+	<-done
+	return nil
 }
