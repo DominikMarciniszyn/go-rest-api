@@ -3,10 +3,10 @@ package internal
 import (
 	"errors"
 	"github.com/goava/di"
-	"github.com/gofiber/fiber"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"go-rest-api/internal/config"
+	"go-rest-api/internal/server"
 	"os"
 )
 
@@ -21,7 +21,11 @@ func Invoke(invocation di.Invocation) error {
 func init() {
 	var err error
 
-	Container, err = di.New(di.Provide(provideLogger))
+	Container, err = di.New(
+		di.Provide(config.LoadConfig),
+		di.Provide(provideLogger),
+		di.Provide(provideWebServer),
+	)
 
 	if err != nil {
 		panic(err)
@@ -46,6 +50,8 @@ func provideLogger(config *config.Config) (*zerolog.Logger, error) {
 	return &logger, nil
 }
 
-func provideWebServer(log *zerolog.Logger, config *config.Config) *fiber.App {
-	return fiber.New()
+func provideWebServer(log *zerolog.Logger, config *config.Config) *server.WebServer {
+	childLogger := log.With().Str("service", "web-server").Logger()
+
+	return server.New(&childLogger, &config.Port)
 }
