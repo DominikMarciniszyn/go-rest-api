@@ -15,5 +15,5 @@ func createContainer() (*di.Container, error) {
 }
 
 func provideWebServer(config *Config, log *zerolog.Logger) *server.WebServer {
-	return server.New(config, log)
+	return server.New(&config.Server, log)
 }

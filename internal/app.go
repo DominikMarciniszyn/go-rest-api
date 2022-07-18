@@ -41,5 +41,11 @@ func execute(config *Config, webServer *server.WebServer, log *zerolog.Logger) (
 	signal.Notify(stop, os.Interrupt)
 	<-stop
 
+	err = webServer.Shutdown()
+
+	if err != nil && executeError == nil {
+		return err
+	}
+
 	return
 }

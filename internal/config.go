@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/goava/di"
 	"github.com/spf13/viper"
+	"go-rest-api/internal/server"
 )
 
 type postgresConfig struct {
@@ -15,9 +16,10 @@ type postgresConfig struct {
 }
 
 type Config struct {
-	Port     int
-	LogLevel string
-	Pretty   bool
+	Server server.Config
+
+	LogLevel string `env:"LOGLEVEL" default:"info"`
+	Pretty   bool   `env:"PREETY" default:"false"`
 	Postgres postgresConfig
 }
 
