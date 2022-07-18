@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"go-rest-api/internal/database/config"
+	"go-rest-api/internal/database"
 	"go-rest-api/internal/database/entities"
 
 	"github.com/gofiber/fiber"
@@ -10,7 +10,7 @@ import (
 func GetOrders(context *fiber.Ctx) {
 	var orders []entities.Order
 
-	config.Database.Find(&orders)
+	database.Database.Find(&orders)
 
 	context.Status(200).JSON(&orders)
 }
@@ -19,7 +19,7 @@ func GetOrder(context *fiber.Ctx) {
 	id := context.Params("id")
 	var order entities.Order
 
-	result := config.Database.Find(&order, id)
+	result := database.Database.Find(&order, id)
 
 	if result.RowsAffected == 0 {
 		context.Status(404)
@@ -35,7 +35,7 @@ func CreateOrder(context *fiber.Ctx) {
 		context.Status(503).Error()
 	}
 
-	config.Database.Create(&order)
+	database.Database.Create(&order)
 	context.Status(201).JSON(&order)
 }
 
@@ -47,7 +47,7 @@ func UpdateOrder(context *fiber.Ctx) {
 		context.Status(503).Error()
 	}
 
-	config.Database.Where("id = ?", id).Updates(&order)
+	database.Database.Where("id = ?", id).Updates(&order)
 	context.Status(200).JSON(order)
 }
 
@@ -55,11 +55,19 @@ func RemoveOrder(context *fiber.Ctx) {
 	id := context.Params("id")
 	var order entities.Order
 
-	result := config.Database.Delete(&order, id)
+	result := database.Database.Delete(&order, id)
 
 	if result.RowsAffected == 0 {
-		context.Status(404).Error()
+		err := context.Status(404).Error()
+
+		if err != nil {
+			return
+		}
 	}
 
-	context.Status(200).JSON("Deleted")
+	err := context.Status(200).JSON("Deleted")
+
+	if err != nil {
+		return
+	}
 }
