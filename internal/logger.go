@@ -3,12 +3,11 @@ package internal
 import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	"go-rest-api/internal/config"
 	"os"
 	"time"
 )
 
-func provideLogger(config *config.Config) *zerolog.Logger {
+func provideLogger(config *Config) *zerolog.Logger {
 	logLevel, err := zerolog.ParseLevel(config.LogLevel)
 
 	if err != nil {
