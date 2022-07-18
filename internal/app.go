@@ -2,7 +2,6 @@ package internal
 
 import (
 	"github.com/rs/zerolog"
-	"go-rest-api/internal/config"
 	"go-rest-api/internal/server"
 	"os"
 	"os/signal"
@@ -22,7 +21,7 @@ func Run() error {
 	return container.Invoke(execute)
 }
 
-func execute(config *config.Config, webServer *server.WebServer, log *zerolog.Logger) (executeError error) {
+func execute(config *Config, webServer *server.WebServer, log *zerolog.Logger) (executeError error) {
 	var err error
 
 	log.Info().Msg("Starting container...")
