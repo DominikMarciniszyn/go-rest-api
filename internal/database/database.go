@@ -1,9 +1,8 @@
-package config
+package database
 
 import (
 	"fmt"
-	"os"
-
+	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
@@ -22,17 +21,21 @@ func Connect() error {
 		panic(err)
 	}
 
-	Database.AutoMigrate(&entities.Order{})
+	dbError := Database.AutoMigrate(&entities.Order{})
+
+	if dbError != nil {
+		return dbError
+	}
 
 	return nil
 }
 
 func prepareDatabaseUri() string {
-	host := os.Getenv("DATABASE_HOST")
-	user := os.Getenv("DATABASE_USER")
-	password := os.Getenv("DATABASE_PASSWORD")
-	databaseName := os.Getenv("DATABASE_NAME")
-	databasePort := os.Getenv("DATABASE_PORT")
+	host := viper.Get("DATABASE_HOST")
+	user := viper.Get("DATABASE_USER")
+	password := viper.Get("DATABASE_PASSWORD")
+	databaseName := viper.Get("DATABASE_NAME")
+	databasePort := viper.Get("DATABASE_PORT")
 
 	return fmt.Sprintf("host=%v user=%v password=%v dbname=%v port=%v", host, user, password, databaseName, databasePort)
 }

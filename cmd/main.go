@@ -1,24 +1,16 @@
 package main
 
 import (
-	"go-rest-api/cmd/server"
-	"log"
+	"github.com/rs/zerolog/log"
+	"go-rest-api/internal"
 	"os"
-
-	"github.com/joho/godotenv"
 )
 
 func main() {
-	err := loadConfig()
-
-	if err != nil {
-		log.Fatal("Error:", err)
+	if err := internal.Run(); err != nil {
+		log.Err(err).Msg("Something went terribly wrong!")
 		os.Exit(1)
 	}
 
-	server.StartServer()
-}
-
-func loadConfig() error {
-	return godotenv.Load()
+	os.Exit(0)
 }
